@@ -144,4 +144,354 @@ lucide-react/dist/esm/lucide-react.js:
    * See the LICENSE file in the root directory of this source tree.
    *)
 */
-</script></body></html>
+</script>
+<style>
+:root{--recall-shadow:0 30px 60px -20px rgba(0,0,0,.55),0 8px 24px -8px rgba(0,0,0,.35)}
+.recall-scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);opacity:0;transition:opacity .22s ease;z-index:80;backdrop-filter:blur(2px)}
+.recall-scrim.open{opacity:1}
+.recall-drawer{position:fixed;top:0;right:0;height:100vh;width:min(560px,100vw);background:rgb(var(--paper));color:rgb(var(--ink));border-left:1px solid rgb(var(--line));box-shadow:var(--recall-shadow);transform:translateX(105%);transition:transform .28s cubic-bezier(.22,1,.36,1);z-index:81;display:flex;flex-direction:column;overflow:hidden;font-family:inherit}
+.recall-drawer.open{transform:translateX(0)}
+.recall-hero{position:relative;padding:22px 24px 20px;color:#eef4f8;background:linear-gradient(135deg,rgb(var(--hero1)) 0%,rgb(var(--hero2)) 100%)}
+.recall-hero-row{display:flex;align-items:flex-start;gap:14px}
+.recall-avatar{width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);display:grid;place-items:center;font-weight:600;font-size:18px;flex-shrink:0}
+.recall-hero h2{margin:0;font-size:20px;font-weight:600;letter-spacing:-.01em}
+.recall-hero .recall-sub{margin-top:2px;font-size:12px;opacity:.82}
+.recall-tier{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:500;padding:3px 8px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);margin-top:8px}
+.recall-tier .dot{width:6px;height:6px;border-radius:999px}
+.recall-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#eef4f8;cursor:pointer;display:grid;place-items:center;font-size:16px;line-height:1;transition:background .15s ease}
+.recall-close:hover{background:rgba(255,255,255,.16)}
+.recall-body{flex:1;overflow-y:auto;padding:20px 24px 32px;display:flex;flex-direction:column;gap:22px}
+.recall-body::-webkit-scrollbar{width:8px}
+.recall-body::-webkit-scrollbar-thumb{background:rgb(var(--line));border-radius:6px}
+.recall-section{display:flex;flex-direction:column;gap:10px}
+.recall-section h3{margin:0;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgb(var(--muted))}
+.recall-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.recall-stat{padding:12px 14px;background:rgb(var(--sunk));border:1px solid rgb(var(--line));border-radius:12px}
+.recall-stat .lab{font-size:11px;color:rgb(var(--muted));margin-bottom:4px}
+.recall-stat .val{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:rgb(var(--ink))}
+.recall-stat.wide{grid-column:1/-1}
+.recall-card{padding:12px 14px;border:1px solid rgb(var(--line));border-radius:12px;background:rgb(var(--paper));display:flex;flex-direction:column;gap:6px}
+.recall-card+.recall-card{margin-top:8px}
+.recall-card .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.recall-card .who{font-size:13px;font-weight:600;color:rgb(var(--ink))}
+.recall-card .role{font-size:11px;color:rgb(var(--muted))}
+.recall-card .note{font-size:12px;color:rgb(var(--ink));opacity:.85;line-height:1.5}
+.recall-card .meta{display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:rgb(var(--muted))}
+.recall-card .meta a{color:rgb(var(--accent));text-decoration:none}
+.recall-card .meta a:hover{text-decoration:underline}
+.recall-timeline{display:flex;flex-direction:column;gap:0}
+.recall-tl{display:grid;grid-template-columns:78px 1fr;gap:12px;padding:10px 0;border-top:1px solid rgb(var(--line))}
+.recall-tl:first-child{border-top:none;padding-top:2px}
+.recall-tl .date{font-size:11px;color:rgb(var(--muted));font-variant-numeric:tabular-nums;padding-top:2px}
+.recall-tl .body{display:flex;flex-direction:column;gap:4px}
+.recall-tl .body .txt{font-size:13px;color:rgb(var(--ink));line-height:1.45}
+.recall-tl .body .who{font-size:11px;color:rgb(var(--muted))}
+.recall-chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;padding:2px 7px;border-radius:999px;line-height:1.4}
+.recall-chip.ok{background:rgb(var(--ok-soft));color:rgb(var(--ok))}
+.recall-chip.warn{background:rgb(var(--warn-soft));color:rgb(var(--warn))}
+.recall-chip.risk{background:rgb(var(--risk-soft));color:rgb(var(--risk))}
+.recall-chip.infer{background:rgb(var(--infer-soft));color:rgb(var(--infer))}
+.recall-chip.accent{background:rgb(var(--accent-soft));color:rgb(var(--accent))}
+.recall-flag{padding:11px 13px;border-radius:12px;display:grid;grid-template-columns:8px 1fr;gap:12px;align-items:flex-start}
+.recall-flag.risk{background:rgb(var(--risk-soft))}
+.recall-flag.warn{background:rgb(var(--warn-soft))}
+.recall-flag.ok{background:rgb(var(--ok-soft))}
+.recall-flag .bar{width:4px;border-radius:4px;align-self:stretch;margin-top:2px;margin-bottom:2px}
+.recall-flag.risk .bar{background:rgb(var(--risk))}
+.recall-flag.warn .bar{background:rgb(var(--warn))}
+.recall-flag.ok .bar{background:rgb(var(--ok))}
+.recall-flag .title{font-size:13px;font-weight:600;margin:0}
+.recall-flag.risk .title{color:rgb(var(--risk))}
+.recall-flag.warn .title{color:rgb(var(--warn))}
+.recall-flag.ok .title{color:rgb(var(--ok))}
+.recall-flag .note{font-size:12px;color:rgb(var(--ink));opacity:.8;margin-top:2px;line-height:1.5}
+.recall-notes{padding:12px 14px;background:rgb(var(--sunk));border:1px dashed rgb(var(--line));border-radius:12px;font-size:12px;color:rgb(var(--ink));opacity:.88;line-height:1.55}
+.recall-notes ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.recall-footer{padding:14px 20px;border-top:1px solid rgb(var(--line));background:rgb(var(--paper));display:flex;justify-content:space-between;align-items:center;gap:12px}
+.recall-footer .hint{font-size:11px;color:rgb(var(--muted))}
+.recall-btn{border:1px solid rgb(var(--line));background:rgb(var(--sunk));color:rgb(var(--ink));font-size:12px;font-weight:500;padding:8px 12px;border-radius:10px;cursor:pointer;transition:background .15s ease}
+.recall-btn:hover{background:rgb(var(--paper))}
+.recall-btn.primary{background:rgb(var(--accent));border-color:rgb(var(--accent));color:#fff}
+.recall-btn.primary:hover{opacity:.9}
+@media (max-width:640px){.recall-drawer{width:100vw}.recall-grid{grid-template-columns:1fr}}
+</style>
+<script>
+(function(){
+  var PROFILES = {
+    "Familie Rohner": {
+      initials: "FR",
+      subtitle: "Second-generation family holding · Zug",
+      tier: "Tier A",
+      tierTone: "ok",
+      kycLine: "KYC current · next review 2027-02",
+      stats: [
+        {lab:"AUM", val:"CHF 42.7M"},
+        {lab:"Mandate", val:"Discretionary"},
+        {lab:"Strategy", val:"Balanced 60/40"},
+        {lab:"Booking centre", val:"Zurich"},
+        {lab:"Onboarded", val:"14 Jun 2011"},
+        {lab:"Reference currency", val:"CHF"},
+        {lab:"Structure", val:"Rohner Familienstiftung + 2 sub-trusts", wide:true}
+      ],
+      contacts: [
+        {who:"Peter Rohner", role:"Principal, account holder", note:"Prefers quarterly in-person reviews at the Zurich branch.", meta:[{k:"peter@rohner-fo.ch",href:"mailto:peter@rohner-fo.ch"},{k:"+41 43 555 21 88"}]},
+        {who:"Sabine Rohner", role:"Spouse, joint signatory", note:"Copied on all discretionary reports.", meta:[{k:"s.rohner@rohner-fo.ch",href:"mailto:s.rohner@rohner-fo.ch"}]},
+        {who:"Nico Rohner", role:"Next-gen (age 25)", note:"Interested in ESG allocations. Attended last two family calls.", meta:[{k:"nico@rohner-fo.ch",href:"mailto:nico@rohner-fo.ch"}]},
+        {who:"Lea Rohner", role:"Next-gen (age 28)", note:"Beneficiary; lives in London.", meta:[]}
+      ],
+      activity: [
+        {date:"18 Sep 2026", who:"N. Frey", txt:"Portfolio review call — Peter approved 3% tilt toward EU infrastructure.", tag:{tone:"accent",label:"Meeting"}},
+        {date:"02 Sep 2026", who:"Ops", txt:"Q3 performance report dispatched to all four family members.", tag:{tone:"ok",label:"Report"}},
+        {date:"27 Aug 2026", who:"N. Frey", txt:"Nico asked about ESG screening — shared MSCI methodology deck.", tag:{tone:"infer",label:"Follow-up"}},
+        {date:"11 Aug 2026", who:"KYC", txt:"Annual source-of-wealth attestation received and archived.", tag:{tone:"ok",label:"KYC"}}
+      ],
+      flags: [
+        {level:"ok", title:"KYC and AML in good standing", note:"Last full review 12 Feb 2026. Next scheduled Feb 2027."},
+        {level:"warn", title:"Foundation deed refresh pending", note:"Rohner Familienstiftung deed dated 2019. Legal has proposed an update; awaiting Peter's sign-off."}
+      ],
+      notes: [
+        "Peter monitors his private watch collection outside the mandate — do not include in AUM.",
+        "Family celebrates end-of-year gathering at the Dolder; RM traditionally attends.",
+        "Nico is being groomed to take over primary contact from 2028."
+      ]
+    },
+    "Solaris Holding AG": {
+      initials: "SH",
+      subtitle: "Swiss industrial holding · Solar tracker manufacturing",
+      tier: "Corporate",
+      tierTone: "ok",
+      kycLine: "KYC current · UBO file refreshed 06 May 2026",
+      stats: [
+        {lab:"Assets under advisory", val:"CHF 128.4M"},
+        {lab:"Relationship", val:"Treasury + FX"},
+        {lab:"Revolving credit", val:"CHF 25.0M"},
+        {lab:"HQ", val:"Basel"},
+        {lab:"Onboarded", val:"02 Mar 2018"},
+        {lab:"Reference currency", val:"CHF (with EUR/USD/CNY hedges)"},
+        {lab:"Ownership", val:"82.4% Marti Family Trust · 17.6% ESOP", wide:true}
+      ],
+      contacts: [
+        {who:"Rita Bühler", role:"CFO, primary contact", note:"Monthly treasury call every first Tuesday, 09:00 CET.", meta:[{k:"r.buehler@solaris-holding.ch",href:"mailto:r.buehler@solaris-holding.ch"},{k:"+41 61 555 04 12"}]},
+        {who:"Andreas Marti", role:"CEO, UBO", note:"Copied on quarterly board pack only. No day-to-day involvement.", meta:[{k:"a.marti@solaris-holding.ch",href:"mailto:a.marti@solaris-holding.ch"}]},
+        {who:"Yannick Zimmermann", role:"Group Treasurer", note:"Executes on hedging instructions. Direct line into markets desk.", meta:[{k:"y.zimmermann@solaris-holding.ch",href:"mailto:y.zimmermann@solaris-holding.ch"},{k:"+41 61 555 04 33"}]}
+      ],
+      activity: [
+        {date:"22 Sep 2026", who:"Markets", txt:"Rolled EUR/CHF forward: notional €6.2M to 15 Dec 2026.", tag:{tone:"accent",label:"FX"}},
+        {date:"15 Sep 2026", who:"N. Frey", txt:"Discussed potential IPO pathway with Rita Bühler — targeting Q2 2027.", tag:{tone:"infer",label:"Strategic"}},
+        {date:"01 Sep 2026", who:"Credit", txt:"CHF 25M RCF utilisation: 32% (CHF 8.0M drawn).", tag:{tone:"ok",label:"Credit"}},
+        {date:"12 Aug 2026", who:"KYC", txt:"UBO refresh completed — Marti Family Trust deed on file.", tag:{tone:"ok",label:"KYC"}}
+      ],
+      flags: [
+        {level:"ok", title:"UBO documentation complete", note:"Marti Family Trust deed and beneficiary list refreshed 06 May 2026."},
+        {level:"warn", title:"IPO readiness — add compliance touchpoint", note:"If IPO progresses, coordinate with Legal on insider list procedures ahead of the mandate."}
+      ],
+      notes: [
+        "Board pack template lives in the shared drive: /solaris/board-quarterly/.",
+        "Rita prefers concise summaries — max one page for monthly call.",
+        "Sensitive: IPO exploration is not to be shared beyond the deal team."
+      ]
+    },
+    "Dr. Irene Vogt": {
+      initials: "IV",
+      subtitle: "Individual client · Retired cardiologist · Zürich",
+      tier: "Tier B",
+      tierTone: "risk",
+      kycLine: "PEP screening overdue · last completed 12 Aug 2024",
+      stats: [
+        {lab:"AUM", val:"CHF 8.9M"},
+        {lab:"Mandate", val:"Advisory"},
+        {lab:"Strategy", val:"Conservative income"},
+        {lab:"Booking centre", val:"Zurich"},
+        {lab:"Onboarded", val:"22 Nov 2004"},
+        {lab:"Reference currency", val:"CHF"},
+        {lab:"Nationality", val:"Swiss / German (dual)"},
+        {lab:"Age", val:"71"}
+      ],
+      contacts: [
+        {who:"Dr. Irene Vogt", role:"Account holder", note:"Prefers paper statements and in-branch meetings. Do not send unsolicited email.", meta:[{k:"i.vogt@bluewin.ch",href:"mailto:i.vogt@bluewin.ch"},{k:"+41 44 555 61 03"}]},
+        {who:"Stefan Keller", role:"Prior relationship manager", note:"Retires 30 Sep. Available for handover questions until then.", meta:[{k:"s.keller@bank.example",href:"mailto:s.keller@bank.example"}]},
+        {who:"Markus Vogt", role:"Son, potential heir (Berlin)", note:"Not yet a formal contact. Estate discussion opened May 2025.", meta:[]},
+        {who:"Elena Vogt-Reed", role:"Daughter, potential heir (Boston)", note:"US person — flag for FATCA before any beneficiary designation.", meta:[]}
+      ],
+      activity: [
+        {date:"19 Sep 2026", who:"N. Frey", txt:"Introduction call after handover from S. Keller. Client requested a printed portfolio summary.", tag:{tone:"accent",label:"Meeting"}},
+        {date:"04 Sep 2026", who:"Compliance", txt:"PEP screening flagged as overdue — escalation ticket K-2419 opened.", tag:{tone:"risk",label:"KYC"}},
+        {date:"27 Aug 2026", who:"Ops", txt:"Q3 paper statement mailed to Bergstrasse 14, Zürich.", tag:{tone:"ok",label:"Statement"}},
+        {date:"14 May 2025", who:"S. Keller", txt:"Estate planning conversation initiated; client asked about US-person implications for daughter.", tag:{tone:"infer",label:"Note"}}
+      ],
+      flags: [
+        {level:"risk", title:"PEP re-screening overdue", note:"Last completed 12 Aug 2024 (24 months ago). Policy requires refresh every 18 months. Ticket K-2419 open with Compliance."},
+        {level:"warn", title:"Source-of-wealth attestation stale", note:"On file since 2019. Refresh recommended before any inbound transfer over CHF 250k."},
+        {level:"warn", title:"FATCA touchpoint on estate line", note:"Daughter Elena is a US person. Requires W-9 handling if named as beneficiary."}
+      ],
+      notes: [
+        "Do not initiate email; all outreach must be phone or postal mail.",
+        "Client speaks German preferentially; correspondence in DE.",
+        "Handover from Stefan Keller closes 30 Sep 2026 — finalise the transfer note by then."
+      ]
+    }
+  };
+
+  var scrim, drawer, escHandler;
+
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+
+  function tierDot(tone){
+    var color = tone === "risk" ? "var(--risk)" : tone === "warn" ? "var(--warn)" : "var(--ok)";
+    return '<span class="dot" style="background:rgb('+color+')"></span>';
+  }
+
+  function render(name, p){
+    var stats = p.stats.map(function(s){
+      return '<div class="recall-stat'+(s.wide?" wide":"")+'"><div class="lab">'+esc(s.lab)+'</div><div class="val">'+esc(s.val)+'</div></div>';
+    }).join("");
+
+    var contacts = p.contacts.map(function(c){
+      var meta = (c.meta||[]).map(function(m){
+        return m.href ? '<a href="'+esc(m.href)+'">'+esc(m.k)+'</a>' : '<span>'+esc(m.k)+'</span>';
+      }).join("");
+      return '<div class="recall-card">'
+        + '<div class="top"><span class="who">'+esc(c.who)+'</span><span class="role">'+esc(c.role)+'</span></div>'
+        + (c.note?'<div class="note">'+esc(c.note)+'</div>':"")
+        + (meta?'<div class="meta">'+meta+'</div>':"")
+        + '</div>';
+    }).join("");
+
+    var activity = p.activity.map(function(a){
+      var chip = a.tag ? '<span class="recall-chip '+esc(a.tag.tone)+'">'+esc(a.tag.label)+'</span>' : "";
+      return '<div class="recall-tl">'
+        + '<div class="date">'+esc(a.date)+'</div>'
+        + '<div class="body"><div class="txt">'+esc(a.txt)+'</div>'
+        + '<div class="who">'+esc(a.who)+(chip?' · '+chip:"")+'</div>'
+        + '</div></div>';
+    }).join("");
+
+    var flags = p.flags.map(function(f){
+      return '<div class="recall-flag '+esc(f.level)+'">'
+        + '<div class="bar"></div>'
+        + '<div><div class="title">'+esc(f.title)+'</div><div class="note">'+esc(f.note)+'</div></div>'
+        + '</div>';
+    }).join("");
+
+    var notes = '<div class="recall-notes"><ul>'
+      + p.notes.map(function(n){return '<li>'+esc(n)+'</li>'}).join("")
+      + '</ul></div>';
+
+    return ''
+      + '<div class="recall-hero">'
+      +   '<button class="recall-close" aria-label="Close">✕</button>'
+      +   '<div class="recall-hero-row">'
+      +     '<div class="recall-avatar">'+esc(p.initials)+'</div>'
+      +     '<div>'
+      +       '<h2>'+esc(name)+'</h2>'
+      +       '<div class="recall-sub">'+esc(p.subtitle)+'</div>'
+      +       '<div class="recall-tier">'+tierDot(p.tierTone)+esc(p.tier)+' · '+esc(p.kycLine)+'</div>'
+      +     '</div>'
+      +   '</div>'
+      + '</div>'
+      + '<div class="recall-body">'
+      +   '<div class="recall-section"><h3>Snapshot</h3><div class="recall-grid">'+stats+'</div></div>'
+      +   '<div class="recall-section"><h3>Contacts</h3><div>'+contacts+'</div></div>'
+      +   '<div class="recall-section"><h3>Recent activity</h3><div class="recall-timeline">'+activity+'</div></div>'
+      +   '<div class="recall-section"><h3>KYC & open items</h3><div style="display:flex;flex-direction:column;gap:8px">'+flags+'</div></div>'
+      +   '<div class="recall-section"><h3>RM notes</h3>'+notes+'</div>'
+      + '</div>'
+      + '<div class="recall-footer">'
+      +   '<span class="hint">Prototype data · read-only</span>'
+      +   '<div style="display:flex;gap:8px">'
+      +     '<button class="recall-btn" data-recall-close>Close</button>'
+      +     '<button class="recall-btn primary" data-recall-close>Open full profile</button>'
+      +   '</div>'
+      + '</div>';
+  }
+
+  function ensureDrawer(){
+    if (drawer) return;
+    scrim = document.createElement("div");
+    scrim.className = "recall-scrim";
+    scrim.addEventListener("click", close);
+    drawer = document.createElement("aside");
+    drawer.className = "recall-drawer";
+    drawer.setAttribute("role","dialog");
+    drawer.setAttribute("aria-modal","true");
+    drawer.addEventListener("click", function(e){
+      if (e.target.closest(".recall-close, [data-recall-close]")) close();
+    });
+    document.body.appendChild(scrim);
+    document.body.appendChild(drawer);
+  }
+
+  function open(name){
+    var p = PROFILES[name];
+    if (!p) return;
+    ensureDrawer();
+    drawer.innerHTML = render(name, p);
+    drawer.scrollTop = 0;
+    requestAnimationFrame(function(){
+      scrim.classList.add("open");
+      drawer.classList.add("open");
+    });
+    escHandler = function(e){ if (e.key === "Escape") close(); };
+    document.addEventListener("keydown", escHandler);
+    document.body.style.overflow = "hidden";
+  }
+
+  function close(){
+    if (!drawer) return;
+    scrim.classList.remove("open");
+    drawer.classList.remove("open");
+    document.body.style.overflow = "";
+    if (escHandler){ document.removeEventListener("keydown", escHandler); escHandler = null; }
+  }
+
+  function rowForName(root){
+    var span = root.querySelector('span[title="KYC status"]');
+    if (!span) return null;
+    var p = root.querySelector("p");
+    if (!p) return null;
+    var name = p.textContent.trim();
+    return PROFILES[name] ? name : null;
+  }
+
+  document.addEventListener("click", function(e){
+    var row = e.target.closest("div");
+    while (row){
+      if (row.querySelector && row.querySelector('span[title="KYC status"]')){
+        var name = rowForName(row);
+        if (name){
+          e.preventDefault();
+          e.stopPropagation();
+          open(name);
+          return;
+        }
+        break;
+      }
+      row = row.parentElement && row.parentElement.closest("div");
+    }
+  }, true);
+
+  function enhance(){
+    var dots = document.querySelectorAll('span[title="KYC status"]');
+    for (var i=0;i<dots.length;i++){
+      var row = dots[i].closest("div");
+      if (!row || row.dataset.recallEnhanced) continue;
+      var p = row.querySelector("p");
+      if (!p) continue;
+      var name = p.textContent.trim();
+      if (PROFILES[name]){
+        row.style.cursor = "pointer";
+        row.title = "Open " + name;
+        row.dataset.recallEnhanced = "1";
+      }
+    }
+  }
+  var mo = new MutationObserver(enhance);
+  mo.observe(document.body, {childList:true, subtree:true});
+  if (document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", enhance);
+  } else {
+    enhance();
+  }
+})();
+</script>
+</body></html>
